@@ -1,0 +1,82 @@
+import requests
+
+# makes call to website and aquires data
+def aquire_data(zipcode=None, city=None):
+    # base url for aquiring weather data
+    baseUrl = "http://api.openweathermap.org/data/2.5/weather"
+    # enter your api id for the site
+    api_id = "b5a23f5a7c55c6bb33348e7b072bd895"
+    
+    # if/else will add to the url depending choice of zip/city
+    if zipcode is not None:
+        baseUrl += "?zip="+str(zipcode)+",us"+"&units=imperial"
+    
+    else:
+        baseUrl += "?q="+str(city)+",us"+"&units=imperial"
+	
+	# after choice of zip/city is made it will add the api id
+    baseUrl += "&appid="+str(api_id)
+    # make get requets using requests module
+    r = requests.get(baseUrl)
+    # return the response
+    return r
+
+# show data in readabale format
+def display(resp):
+	
+	# this means request was a success and formats forecast data
+	if resp.status_code == 200:
+		data = resp.json()
+		print("status code: ", resp.status_code)
+		print(f"""{data['name']} Weather Forecast:
+		Type: {data['weather'][0]['description']}
+		Wind Speed : {data['wind']['speed']} miles/hr
+		Visibility : {data['visibility']} m
+		Min. Temp : {data['main']['temp_min']} F
+		Max Temp : {data['main']['temp_max']} F
+		Main Temp : {data['main']['temp']} F
+		Feels like Temp : {data['main']['feels_like']} F
+		Humidity : {data['main']['humidity']} %
+		""")
+	
+	else:
+		print("Request Failed: ", resp.status_code)
+
+
+def main():
+	
+	while True:
+		# ask the user for their choice
+		choice = int(input("Select a number and then hit enter :\n1. By Zip Code\n2. By City Name\n3. Exit\n"))
+
+		#will use aquire_data using (zipcode, none) or (none,cityname)
+		#to receive and format the weather forecast per city/zip slection
+		if choice == 1:
+			try:
+				print("connection was successful!")
+				# asks for zip code
+				zipcode = int(input("Enter zip code : "))
+				# aquires data from website
+				resp = aquire_data(zipcode, None)
+				display(resp)
+			except: 
+				print("Error")
+		
+		elif choice == 2:
+			try:
+				print("connection was successful!")
+				# asks for city name
+				cityname = input("Enter city name : ")
+				# aquires data from website
+				resp = aquire_data(None, cityname)
+				display(resp)
+			except:
+				print("Error")
+		
+		elif choice == 3:
+			break
+		
+		else:
+			print("please enter 1,2,or 3\n")
+
+main()
