@@ -5,7 +5,7 @@ def aquire_data(zipcode=None, city=None):
     # base url for aquiring weather data
     baseUrl = "http://api.openweathermap.org/data/2.5/weather"
     # enter your api id for the site
-    api_id = "b5a23f5a7c55c6bb33348e7b072bd895"
+    api_id = ""
     
     # if/else will add to the url depending choice of zip/city
     if zipcode is not None:
